@@ -74,6 +74,8 @@ async def fetch_repo_data(github_url: str) -> dict:
         "language": meta.get("language"),
         "stars": meta.get("stargazers_count"),
         "forks": meta.get("forks_count"),
+        "watchers": meta.get("watchers_count"),
+        "file_count": len(file_paths),
         "topics": meta.get("topics", []),
         "file_tree": file_paths,
         "file_contents": file_contents,

@@ -2,6 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
+  timeout: 30000, // 30 seconds
 });
 
 /**
@@ -10,9 +11,18 @@ const api = axios.create({
  * @param {"standard"|"recruiter"} mode
  */
 export async function submitReview(githubUrl, mode) {
-  const { data } = await api.post("/review", {
-    github_url: githubUrl,
-    mode,
-  });
-  return data;
+  try {
+    const { data } = await api.post("/review", {
+      github_url: githubUrl,
+      mode,
+    });
+    return data;
+  } catch (error) {
+    throw {
+      message:
+        error?.response?.data?.detail ||
+        "Failed to analyze repository. Please try again.",
+      status: error?.response?.status,
+    };
+  }
 }

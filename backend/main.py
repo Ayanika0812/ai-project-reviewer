@@ -44,4 +44,15 @@ async def review(request: Request, body: ReviewRequest):
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"AI analysis failed: {str(e)}")
 
-    return result
+    return {
+        "repo_info": {
+            "name": repo_data["name"],
+            "description": repo_data["description"],
+            "language": repo_data["language"],
+            "stars": repo_data["stars"],
+            "forks": repo_data["forks"],
+            "watchers": repo_data["watchers"],
+            "file_count": repo_data["file_count"],
+        },
+        **result
+    }

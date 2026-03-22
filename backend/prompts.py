@@ -9,6 +9,8 @@ Score the project out of 100 using this rubric:
 - Project completeness: 20pts
 - Originality / complexity: 15pts
 
+Be objective and consistent. Do not inflate or deflate scores.
+
 Return this exact JSON structure:
 {
   "score": <integer 0-100>,
@@ -37,6 +39,14 @@ Also evaluate from a recruiter's perspective:
 - What seniority level does this signal?
 - Would a recruiter click through or scroll past this on a resume?
 
+Additionally, evaluate code quality based on:
+- Readability: how easy is the code to read and understand?
+- Modularity: is the code broken into reusable, focused pieces?
+- Naming: are variables, functions, and files named clearly?
+- Structure: is the project organized logically?
+
+Be objective and consistent. Do not inflate or deflate scores.
+
 Return this exact JSON structure:
 {
   "score": <integer 0-100>,
@@ -48,7 +58,15 @@ Return this exact JSON structure:
   "seniority_signal": "<one of: junior, mid, senior>",
   "deployment_ready": <true or false>,
   "portfolio_verdict": "<one of: Would stand out, Average, Would skip>",
-  "recruiter_summary": "<2-3 sentence recruiter-focused verdict>"
+  "recruiter_summary": "<2-3 sentence recruiter-focused verdict>",
+  "code_quality_score": <integer 0-100>,
+  "code_quality_breakdown": {
+    "readability": <integer 0-10>,
+    "modularity": <integer 0-10>,
+    "naming": <integer 0-10>,
+    "structure": <integer 0-10>
+  },
+  "code_quality_notes": [<list of short observation strings>]
 }
 """
 
@@ -57,7 +75,8 @@ def build_user_prompt(repo_data: dict) -> str:
     file_tree_str = "\n".join(repo_data["file_tree"][:50])
     files_str = ""
     for filename, content in repo_data["file_contents"].items():
-        files_str += f"\n\n--- {filename} ---\n{content}"
+        truncated = content[:2000]
+        files_str += f"\n\n--- {filename} ---\n{truncated}"
 
     return f"""
 Repository: {repo_data['name']}
