@@ -1,10 +1,13 @@
 # 🔍 AI Project Reviewer
 
+> Built by [Ayanika Paul](https://github.com/AyanikaPaul)
+
 An AI-powered web application that analyzes GitHub repositories and provides structured feedback on code quality, architecture, and best practices — the way a senior engineer or recruiter would.
 
 ![AI Project Reviewer](https://img.shields.io/badge/Built%20with-Gemini%20AI-8b5cf6?style=flat-square)
 ![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square)
 ![React](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61dafb?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ---
 
@@ -217,3 +220,21 @@ VITE_APP_URL=https://your-app.vercel.app
 - Gemini model fallback chain — tries multiple models if one fails
 - GitHub URL validation before API call
 - 30s request timeout with normalized error messages
+
+---
+
+## My Thinking
+
+I built this because I wanted a tool that gives real, structured feedback on GitHub projects — not just "looks good" but the kind of critique a senior engineer or recruiter would actually give.
+
+The core challenge was prompt engineering: getting Gemini to return consistent, structured JSON across different repo types and sizes. I solved this with a strict system prompt, a JSON extraction fallback, and a model fallback chain so the app stays resilient even when one model is overloaded.
+
+Recruiter mode came from a real insight — hiring managers don't read code, they read signals. So I built a separate prompt that evaluates seniority signal, README quality, and deployment readiness as a hiring manager would.
+
+The frontend was designed to feel fast and polished: animated score counter, step-by-step loading, and a share button so results are easy to send to others.
+
+---
+
+## License
+
+MIT © Ayanika Paul — free to use, but please keep the credit.
