@@ -24,12 +24,20 @@ export default function Admin() {
   const [stats, setStats] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [filterDate, setFilterDate] = useState(() => {
+    // Use browser's local date, not UTC
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const dd = String(now.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  });
 
   async function fetchStats(adminKey) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_URL}/admin/stats?key=${encodeURIComponent(adminKey)}`);
+      const res = await fetch(`${API_URL}/admin/stats?key=${encodeURIComponent(adminKey)}&filter_date=${filterDate}`);
       if (res.status === 403) throw new Error("Invalid admin key");
       if (!res.ok) throw new Error("Failed to fetch stats");
       const data = await res.json();
@@ -74,19 +82,24 @@ export default function Admin() {
 
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-white">📊 Usage Dashboard</h1>
-          <button
-            onClick={() => fetchStats(key)}
-            className="text-sm text-brand-400 hover:underline"
-          >
-            Refresh
-          </button>
+          <div className="flex items-center gap-3">
+            <input
+              type="date"
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+              className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-brand-500"
+            />
+            <button onClick={() => fetchStats(key)} className="text-sm text-brand-400 hover:underline">
+              Refresh
+            </button>
+          </div>
         </div>
 
         {/* Stat cards */}
         <div className="grid grid-cols-3 gap-4">
           <StatCard label="Total Reviews" value={stats.total_reviews} icon="🔍" />
           <StatCard label="Unique Users" value={stats.unique_users} icon="👤" />
-          <StatCard label="Reviews Today" value={stats.reviews_today} icon="📅" />
+          <StatCard label={`Reviews on ${stats.selected_date}`} value={stats.reviews_on_date} icon="📅" />
         </div>
 
         {/* Top repos + countries */}
@@ -139,7 +152,7 @@ export default function Admin() {
                   {r.repo_url.replace("https://github.com/", "")}
                 </a>
                 <div className="flex items-center gap-3 text-gray-500 shrink-0 ml-2">
-                  <span>{COUNTRY_FLAGS[r.country] || "🌍"} {r.country}</span>
+                  <span>{COUNTRY_FLAGS[r.country] || "🌍"} {r.city}{r.region ? `, ${r.region}` : ""}, {r.country}</span>
                   <span className="capitalize">{r.mode}</span>
                   {r.score != null && <span className="text-white font-medium">{r.score}/100</span>}
                   <span className="text-xs">{new Date(r.reviewed_at).toLocaleDateString()}</span>

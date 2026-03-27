@@ -21,11 +21,15 @@ function getDeviceId() {
  * @param {"standard"|"recruiter"} mode
  */
 export async function submitReview(githubUrl, mode) {
+  const now = new Date();
+  const localDate = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+
   try {
     const { data } = await api.post("/review", {
       github_url: githubUrl,
       mode,
       device_id: getDeviceId(),
+      local_date: localDate,
     });
     return data;
   } catch (error) {

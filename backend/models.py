@@ -1,4 +1,4 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 from typing import Optional, List
 from enum import Enum
 
@@ -11,6 +11,8 @@ class ReviewMode(str, Enum):
 class ReviewRequest(BaseModel):
     github_url: str
     mode: ReviewMode = ReviewMode.standard
+    local_date: Optional[str] = None  # browser's local date e.g. "2026-03-27"
+    device_id: Optional[str] = None
     device_id: Optional[str] = None
 
 

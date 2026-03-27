@@ -18,6 +18,7 @@ def init_db():
             device_id TEXT,
             ip_address TEXT,
             country TEXT,
+            region TEXT,
             city TEXT,
             repo_url TEXT,
             mode TEXT,

@@ -4,9 +4,52 @@ from slowapi.util import get_remote_address
 from models import ReviewRequest
 from github_service import fetch_repo_data
 from gemini_service import analyze_repo
+from database import get_db
+from datetime import date
+import httpx
 
 router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
+
+
+async def get_location(ip: str) -> dict:
+    """Fetch country, region, city from IP using ip-api.com (free, no key needed)."""
+    try:
+        # Skip for localhost
+        if ip in ("127.0.0.1", "::1", "localhost"):
+            return {"country": "Local", "region": "Local", "city": "Local"}
+        async with httpx.AsyncClient(timeout=5) as client:
+            res = await client.get(f"http://ip-api.com/json/{ip}?fields=country,regionName,city,status")
+            data = res.json()
+            if data.get("status") == "success":
+                return {
+                    "country": data.get("country", "Unknown"),
+                    "region":  data.get("regionName", "Unknown"),
+                    "city":    data.get("city", "Unknown"),
+                }
+    except Exception as e:
+        print(f"[geo] failed: {e}")
+    return {"country": "Unknown", "region": "Unknown", "city": "Unknown"}
+
+
+async def save_review(request: Request, body: ReviewRequest, score: int, repo_url: str):
+    try:
+        ip = request.client.host
+        reviewed_at = body.local_date or date.today().isoformat()
+        location = await get_location(ip)
+
+        conn = get_db()
+        conn.execute(
+            """INSERT INTO reviews (device_id, ip_address, country, region, city, repo_url, mode, score, reviewed_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (body.device_id or ip, ip,
+             location["country"], location["region"], location["city"],
+             repo_url, body.mode, score, reviewed_at)
+        )
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"[db] failed to save review: {e}")
 
 
 @router.post("/review")
@@ -23,6 +66,8 @@ async def review(request: Request, body: ReviewRequest):
         result = await analyze_repo(repo_data, body.mode)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"AI analysis failed: {str(e)}")
+
+    await save_review(request, body, result.get("score"), body.github_url)
 
     return {
         "repo_info": {
