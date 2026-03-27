@@ -11,8 +11,7 @@ class ReviewMode(str, Enum):
 class ReviewRequest(BaseModel):
     github_url: str
     mode: ReviewMode = ReviewMode.standard
-    local_date: Optional[str] = None  # browser's local date e.g. "2026-03-27"
-    device_id: Optional[str] = None
+    local_date: Optional[str] = None
     device_id: Optional[str] = None
 
 
@@ -25,8 +24,8 @@ class StandardReview(BaseModel):
 
 
 class RecruiterReview(StandardReview):
-    readme_quality: str          # "strong" | "weak" | "missing"
-    seniority_signal: str        # "junior" | "mid" | "senior"
+    readme_quality: str
+    seniority_signal: str
     deployment_ready: bool
-    portfolio_verdict: str       # "Would stand out" | "Average" | "Would skip"
+    portfolio_verdict: str
     recruiter_summary: str
