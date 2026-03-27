@@ -5,7 +5,7 @@ const modes = [
     icon: "⚙️",
     desc: "Code quality, structure & best practices",
     active: "border-brand-500 bg-brand-500/10 text-white",
-    inactive: "border-gray-700 bg-gray-900 text-gray-400 hover:border-gray-500",
+    inactive: "border-gray-700 bg-gray-900 text-gray-400 hover:border-gray-500 hover:scale-[1.02]",
   },
   {
     id: "recruiter",
@@ -13,7 +13,7 @@ const modes = [
     icon: "💼",
     desc: "How this looks to a hiring manager",
     active: "border-purple-500 bg-purple-500/10 text-white shadow-lg shadow-purple-500/20",
-    inactive: "border-purple-900 bg-purple-950/40 text-purple-300 hover:border-purple-600",
+    inactive: "border-purple-900 bg-purple-950/40 text-purple-300 hover:border-purple-600 hover:scale-[1.02]",
     badge: "Unique",
   },
 ];

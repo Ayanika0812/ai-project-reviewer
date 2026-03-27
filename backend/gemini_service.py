@@ -1,6 +1,6 @@
 import google.generativeai as genai
-import os
 import json
+from config import GEMINI_API_KEY
 from prompts import STANDARD_SYSTEM_PROMPT, RECRUITER_SYSTEM_PROMPT, build_user_prompt
 
 MODELS_TO_TRY = [
@@ -40,7 +40,7 @@ async def _call_gemini(system_prompt: str, user_prompt: str) -> str:
 
 
 async def analyze_repo(repo_data: dict, mode: str) -> dict:
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+    genai.configure(api_key=GEMINI_API_KEY)
 
     user_prompt = build_user_prompt(repo_data)
     raw = await _call_gemini(_get_system_prompt(mode), user_prompt)

@@ -11,6 +11,7 @@ class ReviewMode(str, Enum):
 class ReviewRequest(BaseModel):
     github_url: str
     mode: ReviewMode = ReviewMode.standard
+    device_id: Optional[str] = None
 
 
 class StandardReview(BaseModel):

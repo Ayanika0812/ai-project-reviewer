@@ -34,9 +34,9 @@ export default function RecruiterPanel({ data }) {
       </div>
 
       {data.recruiter_summary && (
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-          <div className="text-xs text-gray-500 uppercase tracking-wide mb-2">Recruiter's Take</div>
-          <p className="text-gray-200 text-sm leading-relaxed">{data.recruiter_summary}</p>
+        <div className="bg-card border border-border rounded-lg p-4">
+          <div className="text-xs text-muted uppercase tracking-wide mb-2">Recruiter's Take</div>
+          <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>{data.recruiter_summary}</p>
         </div>
       )}
     </div>
@@ -45,8 +45,8 @@ export default function RecruiterPanel({ data }) {
 
 function Stat({ label, children }) {
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-      <div className="text-xs text-gray-500 uppercase tracking-wide mb-2">{label}</div>
+    <div className="bg-card border border-border rounded-lg p-4">
+      <div className="text-xs text-muted uppercase tracking-wide mb-2">{label}</div>
       {children}
     </div>
   );

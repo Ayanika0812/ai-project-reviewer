@@ -1,13 +1,21 @@
 # Python
 backend/venv/
+venv/
 backend/__pycache__/
+__pycache__/
 backend/*.pyc
+*.pyc
 backend/.env
+.env
+*.db
 
 # Node
 frontend/node_modules/
 frontend/dist/
 frontend/.env
+
+# Docs
+docs/
 
 # General
 .DS_Store

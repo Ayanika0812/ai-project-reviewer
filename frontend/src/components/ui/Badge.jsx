@@ -1,9 +1,9 @@
 const colorMap = {
-  green: "bg-green-900 text-green-300",
-  red: "bg-red-900 text-red-300",
-  yellow: "bg-yellow-900 text-yellow-300",
-  blue: "bg-blue-900 text-blue-300",
-  gray: "bg-gray-800 text-gray-300",
+  green:  "bg-green-900/40 text-green-300 border border-green-800/50",
+  red:    "bg-red-900/40 text-red-300 border border-red-800/50",
+  yellow: "bg-yellow-900/40 text-yellow-300 border border-yellow-800/50",
+  blue:   "bg-blue-900/40 text-blue-300 border border-blue-800/50",
+  gray:   "bg-card text-muted border border-border",
 };
 
 export default function Badge({ label, color = "gray" }) {

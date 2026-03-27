@@ -1,6 +1,5 @@
 import httpx
-import os
-from typing import Optional
+from config import GITHUB_TOKEN
 
 GITHUB_API = "https://api.github.com"
 
@@ -14,10 +13,9 @@ KEY_FILES = [
 
 
 def _headers() -> dict:
-    token = os.getenv("GITHUB_TOKEN")
     headers = {"Accept": "application/vnd.github+json"}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
+    if GITHUB_TOKEN:
+        headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
     return headers
 
 
