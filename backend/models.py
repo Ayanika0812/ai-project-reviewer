@@ -1,31 +1,11 @@
-from pydantic import BaseModel
-from typing import Optional, List
-from enum import Enum
+from typing import Optional
+from fastapi import Request
 
 
-class ReviewMode(str, Enum):
-    standard = "standard"
-    recruiter = "recruiter"
-
-
-class ReviewRequest(BaseModel):
-    github_url: str
-    mode: ReviewMode = ReviewMode.standard
-    local_date: Optional[str] = None
-    device_id: Optional[str] = None
-
-
-class StandardReview(BaseModel):
-    score: int
-    strengths: List[str]
-    weaknesses: List[str]
-    suggestions: List[str]
-    summary: str
-
-
-class RecruiterReview(StandardReview):
-    readme_quality: str
-    seniority_signal: str
-    deployment_ready: bool
-    portfolio_verdict: str
-    recruiter_summary: str
+class ReviewRequest:
+    def __init__(self, github_url: str, mode: str = "standard",
+                 local_date: Optional[str] = None, device_id: Optional[str] = None):
+        self.github_url = github_url
+        self.mode = mode
+        self.local_date = local_date
+        self.device_id = device_id

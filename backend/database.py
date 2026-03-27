@@ -1,20 +1,21 @@
-import sqlite3
+import psycopg2
+import psycopg2.extras
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "usage.db")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn = psycopg2.connect(DATABASE_URL)
     return conn
 
 
 def init_db():
     conn = get_db()
-    conn.execute("""
+    cur = conn.cursor()
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS reviews (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             device_id TEXT,
             ip_address TEXT,
             country TEXT,
@@ -27,4 +28,5 @@ def init_db():
         )
     """)
     conn.commit()
+    cur.close()
     conn.close()

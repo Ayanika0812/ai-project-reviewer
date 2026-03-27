@@ -1,15 +1,24 @@
 import google.generativeai as genai
 import json
+import asyncio
 from config import GEMINI_API_KEY
 from prompts import STANDARD_SYSTEM_PROMPT, RECRUITER_SYSTEM_PROMPT, build_user_prompt
 
 MODELS_TO_TRY = [
     "gemini-2.5-flash",
+    "gemini-2.5-pro",
     "gemini-2.0-flash",
+    "gemini-2.0-flash-001",
     "gemini-2.0-flash-lite",
+    "gemini-2.0-flash-lite-001",
+    "gemini-2.5-flash-lite",
     "gemini-3-flash-preview",
-    "gemini-3.1-flash-lite-preview",
     "gemini-3-pro-preview",
+    "gemini-3.1-pro-preview",
+    "gemini-3.1-flash-lite-preview",
+    "gemini-flash-latest",
+    "gemini-flash-lite-latest",
+    "gemini-pro-latest",
 ]
 
 
@@ -26,7 +35,8 @@ async def _call_gemini(system_prompt: str, user_prompt: str) -> str:
                 model_name=model_name,
                 system_instruction=system_prompt
             )
-            response = model.generate_content(
+            response = await asyncio.to_thread(
+                model.generate_content,
                 user_prompt,
                 generation_config=genai.GenerationConfig(temperature=0)
             )

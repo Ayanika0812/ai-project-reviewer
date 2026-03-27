@@ -24,6 +24,11 @@ export default function Admin() {
   const [stats, setStats] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  // Wake up the backend on mount (Render free tier cold start)
+  useEffect(() => {
+    fetch(`${API_URL}/`).catch(() => {});
+  }, []);
+
   const [filterDate, setFilterDate] = useState(() => {
     // Use browser's local date, not UTC
     const now = new Date();
@@ -37,14 +42,24 @@ export default function Admin() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_URL}/admin/stats?key=${encodeURIComponent(adminKey)}&filter_date=${filterDate}`);
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch(
+        `${API_URL}/admin/stats?key=${encodeURIComponent(adminKey)}&filter_date=${filterDate}`,
+        { signal: controller.signal }
+      );
+      clearTimeout(timeout);
       if (res.status === 403) throw new Error("Invalid admin key");
       if (!res.ok) throw new Error("Failed to fetch stats");
       const data = await res.json();
       setStats(data);
       setSubmitted(true);
     } catch (e) {
-      setError(e.message);
+      if (e.name === "AbortError") {
+        setError("Request timed out. Backend may be starting up — try again in a moment.");
+      } else {
+        setError(e.message);
+      }
     } finally {
       setLoading(false);
     }
