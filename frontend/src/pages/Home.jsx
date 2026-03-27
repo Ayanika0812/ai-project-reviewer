@@ -5,6 +5,7 @@ import UrlInput from "../components/form/UrlInput";
 import ModeToggle from "../components/form/ModeToggle";
 import Button from "../components/ui/Button";
 import LoadingSteps from "../components/ui/LoadingSteps";
+import RecentReviews from "../components/ui/RecentReviews";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -93,6 +94,8 @@ export default function Home() {
                 Ayanika Paul
               </a>
             </p>
+
+            <RecentReviews onSelect={(name) => setUrl(`https://github.com/${name}`)} />
           </>
         )}
 
